@@ -1,4 +1,5 @@
 _                 = require 'lodash'
+url               = require 'url'
 TriggersService   = require 'triggers-service'
 debug             = require('debug')('rest-worker:queue-worker')
 
@@ -23,24 +24,36 @@ class QueueWorker
       @jobTypes[jobType] result, callback
 
   triggerById: ({metadata,rawData}, callback) =>
-    {auth,flowId,triggerId} = metadata
+    {auth,flowId,triggerId,responseBaseUri} = metadata
     body = JSON.parse rawData
     triggersService = new TriggersService {meshbluConfig: auth}
-    defaultPayload =
-      callbackUrl: "https://rest.octoblu.com/respond/#{responseId}"
-      callbackMethod: 'POST'
-      responseId: responseId
+    defaultPayload = @getDefaultPayload responseBaseUri, responseId
     triggersService.sendMessageById {flowId,triggerId,body,defaultPayload}, callback
 
   triggerByName: ({metadata,rawData}, callback) =>
-    {auth,triggerName,responseId} = metadata
+    {auth,triggerName,responseId,responseBaseUri} = metadata
     body = JSON.parse rawData
     triggersService = new TriggersService {meshbluConfig: auth}
+
+    defaultPayload = @getDefaultPayload responseBaseUri, responseId
+    triggersService.sendMessageByName {triggerName,body,defaultPayload}, callback
+
+  getDefaultPayload: (responseBaseUri, responseId) =>
+    responseUrlObj = url.parse responseBaseUri || 'https://rest.octoblu.com/'
+    urlObj =
+      hostname: responseUrlObj.hostname
+      protocol: responseUrlObj.protocol
+      pathname: "/respond/#{responseId}"
+
+    urlObj.port = responseUrlObj.port if responseUrlObj.port
+
+    callbackUrl = url.format urlObj
     defaultPayload =
-      callbackUrl: "https://rest.octoblu.com/respond/#{responseId}"
+      callbackUrl: callbackUrl
       callbackMethod: 'POST'
       responseId: responseId
-    triggersService.sendMessageByName {triggerName,body,defaultPayload}, callback
+
+    return defaultPayload
 
   respondWithError: (error, responseId, callback) =>
     response =
