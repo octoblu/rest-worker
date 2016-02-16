@@ -18,7 +18,7 @@ class Command
       .version packageJSON.version
       .option '-n, --namespace <rest>', 'job handler queue namespace.', 'rest'
       .option '-s, --single-run', 'perform only one job.'
-      .option '-t, --timeout <30>', 'seconds to wait for a next job.', @parseInt, 30
+      .option '-t, --timeout <15>', 'seconds to wait for a next job.', @parseInt, 15
       .parse process.argv
 
     {@namespace,@singleRun,@timeout} = commander
