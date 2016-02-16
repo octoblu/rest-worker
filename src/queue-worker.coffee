@@ -1,3 +1,4 @@
+_                 = require 'lodash'
 TriggersService   = require 'triggers-service'
 debug             = require('debug')('rest-worker:queue-worker')
 
@@ -28,9 +29,14 @@ class QueueWorker
     triggersService.sendMessageById {flowId,triggerId,body}, callback
 
   triggerByName: ({metadata,rawData}, callback) =>
-    {auth,triggerName} = metadata
+    {auth,triggerName,responseId} = metadata
     body = JSON.parse rawData
     triggersService = new TriggersService {meshbluConfig: auth}
+    defaults =
+      callbackUrl: "https://rest.octoblu.com/respond/#{responseId}"
+      callbackMethod: 'POST'
+      responseId: responseId
+    _.extends body, defaults
     triggersService.sendMessageByName {triggerName,body}, callback
 
   respondWithError: (error, responseId, callback) =>
