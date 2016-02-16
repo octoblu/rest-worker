@@ -19,8 +19,10 @@ class QueueWorker
       unless @jobTypes[jobType]?
         error = new Error 'Invalid Job'
         error.code = 422
+        debug 'invalid job'
         return @respondWithError error, responseId, callback
 
+      debug 'doing job', result
       @jobTypes[jobType] result, callback
 
   triggerById: ({metadata,rawData}, callback) =>
