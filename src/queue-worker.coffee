@@ -26,18 +26,21 @@ class QueueWorker
     {auth,flowId,triggerId} = metadata
     body = JSON.parse rawData
     triggersService = new TriggersService {meshbluConfig: auth}
-    triggersService.sendMessageById {flowId,triggerId,body}, callback
+    defaultPayload =
+      callbackUrl: "https://rest.octoblu.com/respond/#{responseId}"
+      callbackMethod: 'POST'
+      responseId: responseId
+    triggersService.sendMessageById {flowId,triggerId,body,defaultPayload}, callback
 
   triggerByName: ({metadata,rawData}, callback) =>
     {auth,triggerName,responseId} = metadata
     body = JSON.parse rawData
     triggersService = new TriggersService {meshbluConfig: auth}
-    defaults =
+    defaultPayload =
       callbackUrl: "https://rest.octoblu.com/respond/#{responseId}"
       callbackMethod: 'POST'
       responseId: responseId
-    _.extend body, defaults
-    triggersService.sendMessageByName {triggerName,body}, callback
+    triggersService.sendMessageByName {triggerName,body,defaultPayload}, callback
 
   respondWithError: (error, responseId, callback) =>
     response =
