@@ -36,7 +36,7 @@ class QueueWorker
       callbackUrl: "https://rest.octoblu.com/respond/#{responseId}"
       callbackMethod: 'POST'
       responseId: responseId
-    _.extends body, defaults
+    _.extend body, defaults
     triggersService.sendMessageByName {triggerName,body}, callback
 
   respondWithError: (error, responseId, callback) =>
