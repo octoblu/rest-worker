@@ -23,7 +23,9 @@ class QueueWorker
         return @respondWithError error, responseId, callback
 
       debug 'doing job', result
-      @jobTypes[jobType] result, callback
+      @jobTypes[jobType] result, (error) =>
+        return @respondWithError error, responseId, callback if error?
+        callback()
 
   triggerById: ({metadata,rawData}, callback) =>
     {auth,flowId,triggerId,responseBaseUri} = metadata
