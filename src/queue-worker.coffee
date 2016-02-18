@@ -35,12 +35,12 @@ class QueueWorker
     triggersService.sendMessageById {flowId,triggerId,body,defaultPayload}, callback
 
   triggerByName: ({metadata,rawData}, callback) =>
-    {auth,triggerName,responseId,responseBaseUri} = metadata
+    {auth,triggerName,responseId,responseBaseUri,type} = metadata
     body = JSON.parse rawData
     triggersService = new TriggersService {meshbluConfig: auth}
 
     defaultPayload = @getDefaultPayload responseBaseUri, responseId
-    triggersService.sendMessageByName {triggerName,body,defaultPayload}, callback
+    triggersService.sendMessageByName {triggerName,body,defaultPayload,type}, callback
 
   getDefaultPayload: (responseBaseUri, responseId) =>
     responseUrlObj = url.parse responseBaseUri || 'https://rest.octoblu.com/'
