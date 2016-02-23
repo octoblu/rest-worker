@@ -1,6 +1,6 @@
 {
   "name": "rest-worker",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "description": "Rest worker",
   "main": "index.js",
   "scripts": {
@@ -37,6 +37,6 @@
     "meshblu-config": "^3.1.1",
     "meshblu-core-job-manager": "^3.2.0",
     "redis": "^2.4.2",
-    "triggers-service": "^1.9.1"
+    "triggers-service": "^2.0.1"
   }
 }
