@@ -28,14 +28,14 @@ class QueueWorker
         callback()
 
   triggerById: ({metadata,rawData}, callback) =>
-    {auth,flowId,triggerId,responseBaseUri} = metadata
+    {auth, flowId, responseId, triggerId, responseBaseUri} = metadata
     body = JSON.parse rawData
     triggersService = new TriggersService {meshbluConfig: auth}
     defaultPayload = @getDefaultPayload responseBaseUri, responseId
-    triggersService.sendMessageById {flowId,triggerId,body,defaultPayload}, callback
+    triggersService.sendMessageById {flowId, triggerId, body, defaultPayload}, callback
 
   triggerByName: ({metadata,rawData}, callback) =>
-    {auth,triggerName,responseId,responseBaseUri,type} = metadata
+    {auth, triggerName, responseId, responseBaseUri, type} = metadata
     body = JSON.parse rawData
     triggersService = new TriggersService {meshbluConfig: auth}
 
